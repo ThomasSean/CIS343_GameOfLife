@@ -124,81 +124,75 @@ int main(int argc, char** argv){
 	char* buffer;
 	char* filename;
 	int filesize;
-	while(loop == 'y'){
-		printf("do you wish to play? (y/n) ");
-		scanf(" %c", &loop);
-		if(loop !='y')
-			loop = 'n';
-		char *r = argv[0]; //in command life takes the first argument which is row size.
-		char *c = argv[1]; //takes second argument which is column size.
-		filename = argv[2]; //see if we need argv or argc 
-		
-		//convert char into ints
-		int row = (int) r;
-		int col = (int) c;
-		
-		char **board = NULL;
-		char **readbuffer = NULL;
+	
+	if(loop !='y')
+		loop = 'n';
+	char *r = argv[0]; //in command life takes the first argument which is row size.
+	char *c = argv[1]; //takes second argument which is column size.
+	filename = argv[2]; //see if we need argv or argc 
+	
+	//convert char into ints
+	int row = (int) r;
+	int col = (int) c;
+	
+	char **board = NULL;
+	char **readbuffer = NULL;
 
-		int irow = 0;
-		int icol = 0;
-		board = (char **)malloc(row * sizeof(char*));
+	int irow = 0;
+	int icol = 0;
+	board = (char **)malloc(row * sizeof(char*));
 		
 		
-		filesize = read_file(filename, &buffer); //read file in
+	filesize = read_file(filename, &buffer); //read file in
 
-		//initialize board
-		for (irow = 0; irow < row; irow++)
-			board[irow] = (char *)malloc(col * sizeof(char));
+	//initialize board
+	for (irow = 0; irow < row; irow++)
+		board[irow] = (char *)malloc(col * sizeof(char));
 
-		if(board[irow] == NULL) //no rows given return
-			printf("no rows or columns were entered into command line");
-			return 1;
+	if(board[irow] == NULL) //no rows given return
+		printf("no rows or columns were entered into command line");
+		return 1;
 
-		for (irow = 0; irow < row; irow++){
-			for(icol = 0; icol < col; icol++){
-				board[irow][icol] = 0; //create empty board with at the moment all dead.
-			}
+	for (irow = 0; irow < row; irow++){
+		for(icol = 0; icol < col; icol++){
+			board[irow][icol] = 0; //create empty board with at the moment all dead.
 		}
-		int count =0;
-		while (count != (row * col)){
-			for(int i =0; i < row; i++){
-				for(int j = 0; j < col; j++){
-					readbuffer[i][j] = buffer[count]; 
-					count++;
-				}
-			}	
-		}
-		board = readbuffer;
-		//initialize_board (board, row, col); //may not need, replaced with array call above.
-		//read file
-		print(board, irow, icol); //check if working, else try globals and see if that fixes.
-		play(board, irow, icol);
-		while(s == 's'){
-			printf("do you wish to save the game? Press s for save, d for delete");
-			scanf(" %c", &s);
-			if(s != 's')
-				s = 'd';
-			count =0;   //reset count
-			while (count != (row * col)){
-				for(int i =0; i < row; i++){
-					for(int j = 0; j < col; j++){
-						buffer[count] = readbuffer[i][j]; 
-						count++;
-					}
-				}	
-			}
-			readbuffer = board;
-			write_file(filename, buffer, filesize); //write file out
-		}
-		free (board[irow]);
-		free (board);
-		
-		printf("do you wish to play again? (y/n) ");
-		scanf(" %c", &loop);
-		if(loop !='y')
-			loop = 'n';
 	}
+	int count =0;
+	while (count != (row * col)){
+		for(int i =0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				readbuffer[i][j] = buffer[count]; 
+				count++;
+			}
+		}	
+	}
+	board = readbuffer;
+	//initialize_board (board, row, col); //may not need, replaced with array call above.
+	//read file
+	print(board, irow, icol); //check if working, else try globals and see if that fixes.
+	play(board, irow, icol);
+
+	count =0;   //reset count
+	while (count != (row * col)){
+		for(int i =0; i < row; i++){
+			for(int j = 0; j < col; j++){
+				buffer[count] = readbuffer[i][j]; 
+				count++;
+			}
+		}	
+	}
+	readbuffer = board;
+	write_file(filename, buffer, filesize); //write file out
+	
+	free (board[irow]);
+	free (board);
+	
+	printf("do you wish to play again? (y/n) ");
+	scanf(" %c", &loop);
+	if(loop !='y')
+		loop = 'n';
+	
 	
 	return 0;
 }
